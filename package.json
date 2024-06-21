@@ -1,0 +1,21 @@
+{
+  "name": "hypixel-mod-api-js",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node scripts/clean.mjs; tsc;"
+  },
+  "author": "TBHGodPro",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/varint": "^6.0.3",
+    "typed-emitter": "^2.1.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@minecraft-js/uuid": "^1.0.3",
+    "varint": "^6.0.0"
+  }
+}
