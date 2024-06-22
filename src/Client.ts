@@ -45,9 +45,11 @@ export default class Client extends (EventEmitter as new () => TypedEventEmitter
     });
     this.handler.on('party_info', data => {
       this.log('log', 'PARTY INFO', data);
+      this.emit('partyInfo', data);
     });
     this.handler.on('player_info', data => {
       this.log('log', 'PLAYER INFO', data);
+      this.emit('playerInfo', data);
     });
 
     this.handler.on('event', (name, data) => {
@@ -152,6 +154,8 @@ export interface ClientOptions {
 export type ClientEvents = {
   hello(environmentID: EnvironmentID): void;
   pong(response: string): void;
+  partyInfo(info: ClientboundPartyInfo): void;
+  playerInfo(info: ClientboundPlayerInfo): void;
 
   event: PacketHandlerEvents['event'];
 } & {
