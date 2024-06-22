@@ -4,6 +4,8 @@ import PacketHandler, { EventsMap, PacketHandlerEvents } from './packets/PacketH
 import TypedEventEmitter from 'typed-emitter';
 import { EnvironmentID, Events } from './Types';
 import { setTimeout } from 'node:timers/promises';
+import { ClientboundPlayerInfo } from './packets/impl/clientbound/ClientboundPlayerInfoPacket';
+import { ClientboundPartyInfo } from './packets/impl/clientbound/ClientboundPartyInfoPacket';
 
 export default class Client extends (EventEmitter as new () => TypedEventEmitter<ClientEvents>) {
   public readonly handler: PacketHandler;
@@ -108,6 +110,22 @@ export default class Client extends (EventEmitter as new () => TypedEventEmitter
         timeout === false ? new Promise<void>(() => {}) : setTimeout(timeout ?? this.options.maxPingTimeout),
       ])) ?? null
     );
+  }
+
+  public async getPlayerInfo(): Promise<ClientboundPlayerInfo>;
+  public async getPlayerInfo(timeout: number): Promise<ClientboundPlayerInfo | null>;
+  public async getPlayerInfo(timeout?: number): Promise<ClientboundPlayerInfo | null> {
+    await this.sendPacket('hypixel:player_info', {});
+
+    return (await Promise.race([this.awaitPacket('hypixel:player_info'), timeout ? setTimeout(timeout) : new Promise<void>(() => {})])) ?? null;
+  }
+
+  public async getPartyInfo(): Promise<ClientboundPartyInfo>;
+  public async getPartyInfo(timeout: number): Promise<ClientboundPartyInfo | null>;
+  public async getPartyInfo(timeout?: number): Promise<ClientboundPartyInfo | null> {
+    await this.sendPacket('hypixel:party_info', {});
+
+    return (await Promise.race([this.awaitPacket('hypixel:party_info'), timeout ? setTimeout(timeout) : new Promise<void>(() => {})])) ?? null;
   }
 
   public async register(events: (keyof typeof PacketHandler.events)[]): Promise<void> {
